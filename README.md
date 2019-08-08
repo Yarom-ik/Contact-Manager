@@ -1,9 +1,3 @@
-# SFDX App
+# salesforce lightning contact manager
 
-## Dev, Build and Test
 
-## Resources
-
-## Description of Files and Directories
-
-## Issues
