@@ -1,0 +1,121 @@
+<template>
+  <lightning-card title="Contacts List" icon-name="custom:custom63">
+    <div class="slds-m-around_medium">
+      <lightning-input type="search" onchange={handleKeyChange} class="slds-m-bottom_small" label="Search"
+        value={searchKey}></lightning-input>
+      <template if:true={contacts}>
+        <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout">
+          <thead>
+            <tr class="slds-text-heading_label">
+              <th scope="col">
+                <div class="slds-truncate" title="Delete">Action</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="Name">Full Name</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="Email">Email</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="Contact_Level__c">Contact Level</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="Account.Name">Account</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="Owner.Name">Owner</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="CreatedBy.Name">CreatedBy</div>
+              </th>
+              <th scope="col" onclick={handleChange}>
+                <div class="slds-truncate" title="CreatedDate">Created Date</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Use the Apex model and controller to fetch server side data -->
+            <template for:each={contacts} for:item="contact">
+              <tr key={contact.Id}>
+                <th scope="row">
+                  <lightning-button name="delete" label="Del" onclick={deleteRecord} data-id={contact.Id}
+                    data-recordid={contact.Id}></lightning-button>
+                  <!--<div class="slds-truncate" title={contact.Id}>{contact.Id}</div> -->
+                </th>
+                <td>
+                  <div class="slds-truncate" title={contact.Name}>
+                    <a onclick={navigateToContactView} data-id={contact.Id} data-recordid={contact.Id}>{contact.Name}</a>
+                  </div>
+                </td>
+                <td>
+                  <div class="slds-truncate" title={contact.Email}>{contact.Email}</div>
+                </td>
+                <td>
+                  <div class="slds-truncate" title={contact.Contact_Level__c}>{contact.Contact_Level__c}</div>
+                </td>
+                <td>
+                  <div class="slds-truncate" title={contact.AccountName}>{contact.Account.Name}</div>
+                </td>
+                <td>
+                  <div class="slds-truncate" title={contact.OwnerName}>{contact.Owner.Name}</div>
+                </td>
+                <td>
+                  <div class="slds-truncate" title={contact.CreatedByName}>{contact.CreatedBy.Name}</div>
+                </td>
+                <td>
+                  <div class="slds-truncate" title={contact.CreatedDate}>{contact.CreatedDate}</div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </template>
+    </div>
+    <p class="slds-m-vertical_medium content">Total records: <b>{totalrecords} </b> Page <b>{currentpage}</b> of
+      <b> {totalpages}</b></p>
+  </lightning-card>
+
+  <lightning-button name="New contact" label="New contact" onclick={handleRowAction}></lightning-button>
+  <!-- Detail view modal start -->
+  <template if:true={bShowModal}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+      aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <!-- modal header start -->
+        <header class="slds-modal__header">
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+            onclick={closeModal}>
+            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+            </lightning-icon>
+          </button>
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create new contact</h2>
+        </header>
+        <!-- modal body start -->
+
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+          <div class="slds-p-around_x-small">
+            <lightning-input label="FirstName" value={firstName} onchange={handleInputChange}></lightning-input>
+            <lightning-input label="LastName" value={lastName} onchange={handleInputChange} required></lightning-input>
+            <lightning-input label="Email" value={email} onchange={handleInputChange} required></lightning-input>
+
+            <lightning-combobox name="progress" label="Contact Level" value={contactLevel} placeholder="-Select-"
+              options={ContactLevelPicklistValues.data.values} onchange={handleInputChange}>
+            </lightning-combobox>
+
+            <lightning-input label="Account" value={account} onchange={handleInputChange}></lightning-input><br />
+          </div>
+        </div>
+        <!-- modal footer start-->
+        <footer class="slds-modal__footer">
+          <lightning-button variant="neutral" label="Close" title="Close" onclick={closeModal}></lightning-button>
+          <lightning-button variant="brand" type="submit" label="Save" title="Save" onclick={saveModal}>
+          </lightning-button>
+        </footer>
+
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+  <!-- Detail view modal end -->
+
+</template>
